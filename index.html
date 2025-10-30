@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Carrier Calculator - Elite Dangerous</title>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Sintony:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+
+    <link href="/css/style.css" rel="stylesheet">
+
+
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>Fleet Carrier Calculator</h1>
+
+        <div class="summary">
+            <div class="summary-item">
+                <div class="summary-item-label">Total Cost</div>
+                <div class="summary-item-value">{{ totalCostFormatted }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-item-label">Weekly Upkeep</div>
+                <div class="summary-item-value">{{ weeklyUpkeepFormatted }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-item-label">Cargo Available</div>
+                <div class="summary-item-value">{{ cargoAvailableFormatted }}</div>
+            </div>
+        </div>
+
+        <div class="modules-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Status</th>
+                        <th>Buy Cost</th>
+                        <th>Cargo Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="module in modules" :key="module.name">
+                        <td>{{ module.name }}</td>
+                        <td>
+                            <div class="slider-control">
+                                <button 
+                                    class="slider-button"
+                                    :class="{ selected: module.state === 'off' }"
+                                    @click="setModuleState(module, 'off')">
+                                    Off
+                                </button>
+                                <button 
+                                    class="slider-button"
+                                    :class="{ selected: module.state === 'suspended' }"
+                                    @click="setModuleState(module, 'suspended')">
+                                    Suspended
+                                </button>
+                                <button 
+                                    class="slider-button"
+                                    :class="{ selected: module.state === 'active' }"
+                                    @click="setModuleState(module, 'active')">
+                                    Active
+                                </button>
+                            </div>
+                        </td>
+                        <td>{{ formatNumber(module.buy) }} CR</td>
+                        <td>{{ formatNumber(module.cargo) }}t</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            Base Carrier Cost: 5,000,000,000 CR - Base Cargo Capacity: 25,000t
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    baseCost: 5000000000,
+                    baseCargo: 25000,
+                    modules: [
+                        { name: 'Refuel', buy: 40000000, suspendedUpkeep: 750000, activeUpkeep: 1500000, cargo: 500, state: 'off' },
+                        { name: 'Repair', buy: 50000000, suspendedUpkeep: 750000, activeUpkeep: 1500000, cargo: 180, state: 'off' },
+                        { name: 'Armoury', buy: 95000000, suspendedUpkeep: 750000, activeUpkeep: 1500000, cargo: 250, state: 'off' },
+                        { name: 'Redemption Office', buy: 150000000, suspendedUpkeep: 850000, activeUpkeep: 1850000, cargo: 100, state: 'off' },
+                        { name: 'Shipyard', buy: 250000000, suspendedUpkeep: 1800000, activeUpkeep: 6500000, cargo: 3000, state: 'off' },
+                        { name: 'Outfitting', buy: 250000000, suspendedUpkeep: 1500000, activeUpkeep: 5000000, cargo: 1750, state: 'off' },
+                        { name: 'Secure Warehouse', buy: 165000000, suspendedUpkeep: 1250000, activeUpkeep: 2000000, cargo: 250, state: 'off' },
+                        { name: 'Universal Cartographics', buy: 150000000, suspendedUpkeep: 700000, activeUpkeep: 1850000, cargo: 120, state: 'off' },
+                        { name: 'Bar', buy: 200000000, suspendedUpkeep: 1250000, activeUpkeep: 1750000, cargo: 150, state: 'off' },
+                        { name: 'Vista Genomics', buy: 150000000, suspendedUpkeep: 700000, activeUpkeep: 1500000, cargo: 120, state: 'off' },
+                        { name: 'Pioneer Supplies', buy: 250000000, suspendedUpkeep: 1500000, activeUpkeep: 5000000, cargo: 200, state: 'off' }
+                    ]
+                };
+            },
+            computed: {
+                totalCost() {
+                    let cost = this.baseCost;
+                    for (let i = 0; i < this.modules.length; i++) {
+                        if (this.modules[i].state !== 'off') {
+                            cost += this.modules[i].buy;
+                        }
+                    }
+                    return cost;
+                },
+                weeklyUpkeep() {
+                    let upkeep = 0;
+                    for (let i = 0; i < this.modules.length; i++) {
+                        if (this.modules[i].state === 'suspended') {
+                            upkeep += this.modules[i].suspendedUpkeep;
+                        } else if (this.modules[i].state === 'active') {
+                            upkeep += this.modules[i].activeUpkeep;
+                        }
+                    }
+                    return upkeep;
+                },
+                cargoAvailable() {
+                    let cargoUsed = 0;
+                    for (let i = 0; i < this.modules.length; i++) {
+                        if (this.modules[i].state !== 'off') {
+                            cargoUsed += this.modules[i].cargo;
+                        }
+                    }
+                    return this.baseCargo - cargoUsed;
+                },
+                totalCostFormatted() {
+                    return this.formatNumber(this.totalCost) + ' CR';
+                },
+                weeklyUpkeepFormatted() {
+                    return this.formatNumber(this.weeklyUpkeep) + ' CR';
+                },
+                cargoAvailableFormatted() {
+                    return this.formatNumber(this.cargoAvailable) + 't';
+                }
+            },
+            methods: {
+                formatNumber(num) {
+                    return num.toLocaleString('en-US');
+                },
+                setModuleState(module, state) {
+                    module.state = state;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

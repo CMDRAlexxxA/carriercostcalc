@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Sintony', sans-serif;
+    background-color: #141414;
+    color: #f0f0f1;
+    padding: 40px 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: 'Russo One', sans-serif;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+.summary {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.summary-item-label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    opacity: 0.8;
+}
+
+.summary-item-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff7100;
+}
+
+.modules-table {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+th:first-child {
+    text-align: left;
+}
+
+th:nth-child(2) {
+    text-align: center;
+}
+
+th:nth-child(3),
+th:nth-child(4) {
+    text-align: right;
+}
+
+tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+td {
+    padding: 20px 15px;
+    font-size: 1rem;
+}
+
+td:first-child {
+    text-align: left;
+}
+
+td:nth-child(2) {
+    text-align: center;
+}
+
+td:nth-child(3),
+td:nth-child(4) {
+    text-align: right;
+    font-size: 0.95rem;
+}
+
+.slider-control {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.slider-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: capitalize;
+    font-family: 'Sintony', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background: #210a0a;
+    color: #f0f0f0;
+}
+
+.slider-button.selected {
+    background: #ff7100;
+    font-weight: bold;
+}
+
+.slider-button:hover {
+    opacity: 0.8;
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
